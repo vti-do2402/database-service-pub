@@ -1,0 +1,19 @@
+name: Build Docker Image
+description:  Reusable action to build a Docker image
+
+inputs:
+  image_name:
+    description: The name of the Docker image to build.
+    required: true
+  tag:
+    description: The tag for the Docker image.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Build docker image
+      shell: bash
+      run: |
+        sudo chmod 777 /var/run/docker.sock
+        docker build -t ${{ inputs.image_name }}:${{ inputs.tag }} . --no-cache

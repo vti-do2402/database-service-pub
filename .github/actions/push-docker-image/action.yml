@@ -1,0 +1,18 @@
+name: Push Docker Image
+description:  Reusable action to push a Docker image
+
+inputs:
+  image_name:
+    description: The name of the Docker image to push.
+    required: true
+  tag:
+    description: The tag for the Docker image.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: push docker image
+      shell: bash
+      run: |
+        docker push ${{ inputs.image_name }}:${{ inputs.tag }}
