@@ -16,7 +16,7 @@ runs:
         java-version: '${{ inputs.version }}'
         
     - name: Setup Maven
-      uses: s4u/setup-maven-action
+      uses: s4u/setup-maven-action@v1.18.0
       with:
         java-version: 17
         maven-version: 3.8.3
