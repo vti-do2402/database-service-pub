@@ -1,0 +1,28 @@
+name: Pull Request Opened
+
+on: # trigger conditions
+  pull_request:
+    types: [opened, synchronize, reopened] # Optionally, trigger on pull requests too
+
+jobs:
+  build-pull-request:
+    runs-on: mock-project #ubuntu-latest #GitHub hosted - Sharing between
+
+    steps:
+        - name: Checkout Code
+          uses: actions/checkout@v3
+        
+        - name: Build Java App
+          uses: ./.github/actions/build-java
+          with:
+            version: 17
+            
+        # - name: Build Docker Image
+        #   uses: ./.github/actions/build-docker-image
+        #   with:
+        #     image_name: 774305578623.dkr.ecr.ap-southeast-1.amazonaws.com/promotionapp-ui
+        #     tag: pr
+
+        #- SonarQube
+        # - Unit
+        # - Automation Test

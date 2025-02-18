@@ -1,0 +1,27 @@
+name: Build Java App
+description:  Reusable action to build a Java App
+
+inputs:
+  version:
+    description: The Java Version for this app
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Java Runtime
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin' # See 'Supported distributions' for available options
+        java-version: '${{ inputs.version }}'
+        
+    - name: Setup Maven
+      uses: s4u/setup-maven-action@v1.18.0
+      with:
+        java-version: 17
+        maven-version: 3.8.3
+
+    - name: Build Java App
+      shell: bash
+      run: |
+        mvn clean package -DskipTests
