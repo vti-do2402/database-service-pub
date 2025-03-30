@@ -1,0 +1,17 @@
+server:
+  port: ${SERVER_PORT:8081}
+
+spring:
+  application:
+    name: database-service
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+      port: ${DATABASE_PORT:27017}
+
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb: DEBUG
