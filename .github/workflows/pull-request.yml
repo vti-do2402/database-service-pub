@@ -2,7 +2,7 @@ name: Pull Request Opened
 
 on: # trigger conditions
   pull_request:
-    branches: [main, dev]
+    branches: [master, dev]
     types: [opened, synchronize, reopened]
 
 jobs:
