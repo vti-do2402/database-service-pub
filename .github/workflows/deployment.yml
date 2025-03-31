@@ -17,3 +17,4 @@ jobs:
     with:
       runs-on: ${{ vars.RUNS_ON }}
       ecr-repository: ${{ vars.ECR_REPOSITORY }}
+
