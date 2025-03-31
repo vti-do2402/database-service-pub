@@ -6,14 +6,14 @@ on:
 
 jobs:
   build-and-test:
-    uses: vti-do2402/cicd-core/.github/workflows/maven-spring-ci.yml@${{ vars.CICD_CORE_VERSION }}
+    uses: vti-do2402/cicd-core/.github/workflows/maven-spring-ci.yml@main
     with:
       runs-on: ${{ vars.RUNS_ON }}
       distribution: ${{ vars.DISTRIBUTION }}
 
   build-and-publish:
     needs: build-and-test
-    uses: vti-do2402/cicd-core/.github/workflows/ci-template.yml@${{ vars.CICD_CORE_VERSION }}
+    uses: vti-do2402/cicd-core/.github/workflows/ci-template.yml@main
     with:
       runs-on: ${{ vars.RUNS_ON }}
       ecr-repository: ${{ vars.ECR_REPOSITORY }}
