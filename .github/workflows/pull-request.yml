@@ -2,6 +2,7 @@ name: Pull Request Opened
 
 on: # trigger conditions
   pull_request:
+    branches: [main, dev]
     types: [opened, synchronize, reopened] # Optionally, trigger on pull requests too
 
 jobs:
