@@ -7,7 +7,7 @@ on: # trigger conditions
 
 jobs:
   build-and-test:
-    uses: vti-do2402/cicd-core/.github/workflows/maven-spring-ci.yml@feat/workflow-templates
+    uses: vti-do2402/cicd-core/.github/workflows/maven-spring-ci.yml@main
     with:
       runs-on: ubuntu-latest
       distribution: temurin
