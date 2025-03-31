@@ -10,3 +10,4 @@ jobs:
     uses: vti-do2402/cicd-core/.github/workflows/maven-spring-ci.yml@feat/workflow-templates
     with:
       runs-on: ubuntu-latest
+      distribution: temurin
