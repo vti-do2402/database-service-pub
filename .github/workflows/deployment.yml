@@ -2,7 +2,7 @@ name: Build And Publish to Amazon ECR
 
 on:
   push:
-    branches: [master]
+    branches: [master, dev]
 
 permissions:
   contents: write
@@ -10,7 +10,7 @@ permissions:
 jobs:
   CD:
     # needs: CI
-    uses: vti-do2402/cicd-core/.github/workflows/deploy-ecr-template.yml@main
+    uses: vti-do2402/cicd-core/.github/workflows/deploy-ecr-template.yml@dev
     with:
       runs-on: ${{ vars.RUNS_ON }}
       ecr-repository: ${{ vars.ECR_REPOSITORY }}
@@ -20,7 +20,7 @@ jobs:
       AWS_REGION: ${{ secrets.AWS_REGION }}
   CI:
     needs: CD
-    uses: vti-do2402/cicd-core/.github/workflows/maven-spring-ci.yml@main
+    uses: vti-do2402/cicd-core/.github/workflows/maven-spring-ci.yml@dev
     with:
       runs-on: ${{ vars.RUNS_ON }}
       distribution: ${{ vars.DISTRIBUTION }}
