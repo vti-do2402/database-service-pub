@@ -8,19 +8,26 @@ permissions:
   contents: write
   packages: write
 jobs:
+  CI:
+    uses: vti-do2402/cicd-core/.github/workflows/maven-spring-ci.yml@dev
+    with:
+      distribution: ${{ vars.JAVA_DISTRIBUTION }}
+
+  approval:
+    needs: CI
+    runs-on: ${{ vars.RUNNER_LABEL }}
+    steps:
+      - name: Approve
+        run: echo "Approved"
+
   CD:
-    # needs: CI
+    needs: CI
     uses: vti-do2402/cicd-core/.github/workflows/deploy-ecr-template.yml@dev
     with:
-      runs-on: ${{ vars.RUNS_ON }}
+      runs-on: ${{ vars.RUNNER_LABEL }}
       ecr-repository: ${{ vars.ECR_REPOSITORY }}
+      default_bump: ${{ vars.VERSION_BUMP_TYPE }}
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
-  CI:
-    needs: CD
-    uses: vti-do2402/cicd-core/.github/workflows/maven-spring-ci.yml@dev
-    with:
-      runs-on: ${{ vars.RUNS_ON }}
-      distribution: ${{ vars.DISTRIBUTION }}
