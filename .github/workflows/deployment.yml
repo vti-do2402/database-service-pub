@@ -10,27 +10,20 @@ permissions:
 
 jobs:
   ci:
+    name: Build and Test with Maven
     uses: vti-do2402/cicd-core/.github/workflows/maven-spring-ci.yml@dev
     with:
       runs-on: ${{ vars.RUNS_ON }}
       java-version: ${{ vars.JAVA_VERSION }}
       distribution: ${{ vars.JAVA_DISTRIBUTION }}
 
-  approval:
+  tag-and-deploy:
     needs: ci
-    runs-on: ${{ vars.RUNS_ON }}
-    environment: production
-    timeout-minutes: 3
-    steps:
-      - name: Approve
-        run: echo "Approved"
-
-  deploy:
-    needs: approval
+    name: Tag and Deploy to ECR
     uses: vti-do2402/cicd-core/.github/workflows/deploy-ecr-template.yml@dev
     with:
-      environment: ${{ vars.ENVIRONMENT }}
       runs-on: ${{ vars.RUNS_ON }}
+      environment: ${{ vars.ENVIRONMENT }}
       ecr-repository: ${{ vars.ECR_REPOSITORY }}
       default_bump: ${{ vars.VERSION_BUMP_TYPE }}
     secrets:
