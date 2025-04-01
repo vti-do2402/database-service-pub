@@ -11,22 +11,12 @@ permissions:
 jobs:
   ci:
     name: Build and Test with Maven
-    uses: vti-do2402/cicd-core/.github/workflows/maven-spring-ci.yml@dev
+    uses: vti-do2402/cicd-core/.github/workflows/ci-maven.yml@feat/actions
     with:
-      runs-on: ${{ vars.RUNS_ON }}
-      java-version: ${{ vars.JAVA_VERSION }}
+      runs_on: ${{ vars.RUNS_ON }}
+      java_version: ${{ vars.JAVA_VERSION }}
       distribution: ${{ vars.JAVA_DISTRIBUTION }}
-
-  tag-and-deploy:
-    needs: ci
-    name: Tag and Deploy to ECR
-    uses: vti-do2402/cicd-core/.github/workflows/deploy-ecr-template.yml@dev
-    with:
-      runs-on: ${{ vars.RUNS_ON }}
-      environment: ${{ vars.ENVIRONMENT }}
-      ecr-repository: ${{ vars.ECR_REPOSITORY }}
-      default_bump: ${{ vars.VERSION_BUMP_TYPE }}
+      skip_lint: true
     secrets:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
