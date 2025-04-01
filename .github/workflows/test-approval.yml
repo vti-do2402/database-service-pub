@@ -12,6 +12,7 @@ jobs:
 
   approval:
     needs: test
+    environment: production
     runs-on: ubuntu-latest
     steps:
       - run: echo "Approval"
@@ -19,6 +20,5 @@ jobs:
   next-steps:
     runs-on: ubuntu-latest
     needs: approval
-    environment: production
     steps:
       - run: echo "Next Steps"
