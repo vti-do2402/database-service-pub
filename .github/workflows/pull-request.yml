@@ -11,3 +11,4 @@ jobs:
     with:
       runs-on: ${{ vars.RUNS_ON }}
       distribution: ${{ vars.JAVA_DISTRIBUTION }}
+      java-version: ${{ vars.JAVA_VERSION }}
