@@ -1,0 +1,24 @@
+name: Test Approval
+
+on:
+  push:
+    branches: [feat/ci]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Hello, world!"
+
+  approval:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Approval"
+
+  next-steps:
+    runs-on: ubuntu-latest
+    needs: approval
+    environment: production
+    steps:
+      - run: echo "Next Steps"
