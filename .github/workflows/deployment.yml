@@ -19,6 +19,7 @@ jobs:
   approval:
     needs: ci
     runs-on: ${{ vars.RUNS_ON }}
+    environment: production
     timeout-minutes: 3
     steps:
       - name: Approve
