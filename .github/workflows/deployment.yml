@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   ci:
     uses: vti-do2402/cicd-core/.github/workflows/maven-spring-ci.yml@dev
