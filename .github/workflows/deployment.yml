@@ -16,17 +16,8 @@ jobs:
       java-version: ${{ vars.JAVA_VERSION }}
       distribution: ${{ vars.JAVA_DISTRIBUTION }}
 
-  approval:
-    needs: ci
-    runs-on: ${{ vars.RUNS_ON }}
-    environment: production
-    timeout-minutes: 3
-    steps:
-      - name: Approve
-        run: echo "Approved"
-
   deploy:
-    needs: approval
+    needs: ci
     uses: vti-do2402/cicd-core/.github/workflows/deploy-ecr-template.yml@dev
     with:
       environment: ${{ vars.ENVIRONMENT }}
