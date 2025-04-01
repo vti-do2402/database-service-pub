@@ -2,7 +2,7 @@ name: Build And Publish to Amazon ECR
 
 on:
   push:
-    branches: [main, dev]
+    branches: [main]
 
 jobs:
   CI:
@@ -15,15 +15,16 @@ jobs:
   approval:
     needs: CI
     runs-on: ${{ vars.RUNS_ON }}
-    timeout-minutes: 10
+    timeout-minutes: 3
     steps:
       - name: Approve
         run: echo "Approved"
 
   CD:
-    needs: CI
+    needs: approval
     uses: vti-do2402/cicd-core/.github/workflows/deploy-ecr-template.yml@dev
     with:
+      environment: ${{ vars.ENVIRONMENT }}
       runs-on: ${{ vars.RUNS_ON }}
       ecr-repository: ${{ vars.ECR_REPOSITORY }}
       default_bump: ${{ vars.VERSION_BUMP_TYPE }}
