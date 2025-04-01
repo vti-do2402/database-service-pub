@@ -5,14 +5,12 @@ on:
     branches: [test/cicd]
 
 jobs:
-  test:
+  tag:
+    name: Tagging
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Hello, world!"
-
-  tag:
-    uses: mathieudutour/github-tag-action@v6.2
-    with:
-      github_token: ${{ github.token }}
-      default_bump: patch
-      dry_run: true
+      - uses: mathieudutour/github-tag-action@v6.2
+        with:
+          github_token: ${{ github.token }}
+          default_bump: patch
+          dry_run: true
