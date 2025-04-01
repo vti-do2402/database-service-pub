@@ -21,7 +21,7 @@ jobs:
         run: echo "Approved"
 
   CD:
-    needs: CI
+    needs: approval
     uses: vti-do2402/cicd-core/.github/workflows/deploy-ecr-template.yml@dev
     with:
       runs-on: ${{ vars.RUNS_ON }}

@@ -2,12 +2,12 @@ name: Pull Request Opened
 
 on: # trigger conditions
   pull_request:
-    branches: [master, dev]
+    branches: [main, dev]
     types: [opened, synchronize, reopened]
 
 jobs:
   build-and-test:
-    uses: vti-do2402/cicd-core/.github/workflows/maven-spring-ci.yml@main
+    uses: vti-do2402/cicd-core/.github/workflows/maven-spring-ci.yml@dev
     with:
-      runs-on: ubuntu-latest
-      distribution: temurin
+      runs-on: ${{ vars.RUNS_ON }}
+      distribution: ${{ vars.JAVA_DISTRIBUTION }}
