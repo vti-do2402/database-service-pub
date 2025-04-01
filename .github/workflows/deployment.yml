@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 jobs:
-  CI:
+  ci:
     uses: vti-do2402/cicd-core/.github/workflows/maven-spring-ci.yml@dev
     with:
       runs-on: ${{ vars.RUNS_ON }}
@@ -13,14 +13,14 @@ jobs:
       distribution: ${{ vars.JAVA_DISTRIBUTION }}
 
   approval:
-    needs: CI
+    needs: ci
     runs-on: ${{ vars.RUNS_ON }}
     timeout-minutes: 3
     steps:
       - name: Approve
         run: echo "Approved"
 
-  CD:
+  deploy:
     needs: approval
     uses: vti-do2402/cicd-core/.github/workflows/deploy-ecr-template.yml@dev
     with:
