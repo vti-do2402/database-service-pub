@@ -11,10 +11,14 @@ jobs:
       runs-on: ${{ vars.RUNS_ON }}
       distribution: ${{ vars.DISTRIBUTION }}
 
-  build-and-publish:
+  deploy-ecr:
     needs: build-and-test
-    uses: vti-do2402/cicd-core/.github/workflows/ci-template.yml@main
+    uses: vti-do2402/cicd-core/.github/workflows/deploy-ecr-template.yml@main
     with:
       runs-on: ${{ vars.RUNS_ON }}
       ecr-repository: ${{ vars.ECR_REPOSITORY }}
-
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
