@@ -16,8 +16,14 @@ jobs:
           token: ${{ github.token }}
           path: cicd-core
 
+      - name: ls
+        run: |
+          ls -la
+
       - name: Update k8s manifest
+        working-directory: cicd-core
         run: |
           echo "Current directory: $(pwd)"
+          echo "Current file: $(ls -la)"
           echo "Image tag: yeah"
           sed -i 's/image: .*/image: yeah/' kubernetes/deployment.yml
