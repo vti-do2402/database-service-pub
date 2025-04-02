@@ -5,13 +5,19 @@ on:
     branches: [test/cicd]
 
 jobs:
-  ci:
-    name: CI
-    uses: vti-do2402/cicd-core/.github/workflows/ci.yml@feat/actions
-    with:
-      runs_on: ${{ vars.RUNS_ON }}
-      java_version: ${{ vars.JAVA_VERSION }}
-      distribution: ${{ vars.JAVA_DISTRIBUTION }}
-      github_token: ${{ github.token }}
-      default_bump: ${{ vars.VERSION_BUMP_TYPE }}
-      skip_lint: true
+  update-k8s:
+    name: Update Kubernetes
+    runs-on: ${{ vars.RUNS_ON }}
+    steps:
+      - name: Checkout cicd-core
+        uses: actions/checkout@v4
+        with:
+          repository: vti-do2402/cicd-core
+          token: ${{ github.token }}
+          path: cicd-core
+
+      - name: Update k8s manifest
+        run: |
+          echo "Current directory: $(pwd)"
+          echo "Image tag: yeah"
+          sed -i 's/image: .*/image: yeah/' kubernetes/deployment.yml
