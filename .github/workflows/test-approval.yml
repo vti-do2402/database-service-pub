@@ -5,25 +5,21 @@ on:
     branches: [test/cicd]
 
 jobs:
-  update-k8s:
-    name: Update Kubernetes
+  tag:
     runs-on: ${{ vars.RUNS_ON }}
     steps:
-      - name: Checkout cicd-core
+      - name: Checkout Code
         uses: actions/checkout@v4
         with:
-          repository: vti-do2402/cicd-core
           token: ${{ github.token }}
-          path: cicd-core
+
+      - name: Calculate or Create Tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.2
+        with:
+          github_token: ${{ github.token }}
+          dry_run: true
 
       - name: ls
         run: |
           ls -la
-
-      - name: Update k8s manifest
-        working-directory: cicd-core
-        run: |
-          echo "Current directory: $(pwd)"
-          echo "Current file: $(ls -la)"
-          echo "Image tag: yeah"
-          sed -i 's/image: .*/image: yeah/' kubernetes/deployment.yml
