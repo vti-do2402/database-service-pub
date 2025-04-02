@@ -5,21 +5,13 @@ on:
     branches: [test/cicd]
 
 jobs:
-  tag:
-    name: Tagging
-    runs-on: ubuntu-latest
-    steps:
-      - uses: mathieudutour/github-tag-action@v6.2
-        id: tag_version
-        with:
-          github_token: ${{ github.token }}
-          default_bump: patch
-          dry_run: true
-
-      - name: Create a GitHub release
-        uses: ncipollo/release-action@v1
-        with:
-          tag: ${{ steps.tag_version.outputs.new_tag }}
-          name: Release ${{ steps.tag_version.outputs.new_tag }}
-          body: ${{ steps.tag_version.outputs.changelog }}
-          draft: true
+  ci:
+    name: CI Something
+    uses: vti-do2402/cicd-core/.github/workflows/ci.yml@feature/actions
+    with:
+      runs_on: ${{ vars.RUNS_ON }}
+      java_version: ${{ vars.JAVA_VERSION }}
+      distribution: ${{ vars.JAVA_DISTRIBUTION }}
+      github_token: ${{ github.token }}
+      default_bump: ${{ vars.VERSION_BUMP_TYPE }}
+      skip_lint: true
