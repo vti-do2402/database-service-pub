@@ -6,7 +6,7 @@ on:
 
 jobs:
   ci:
-    name: CI Something
+    name: CI
     uses: vti-do2402/cicd-core/.github/workflows/ci.yml@feature/actions
     with:
       runs_on: ${{ vars.RUNS_ON }}
