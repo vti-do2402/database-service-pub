@@ -1,9 +1,11 @@
 name: Pull Request Opened
 
 on: # trigger conditions
-  pull_request:
-    branches: [main, dev]
-    types: [opened, synchronize, reopened]
+  # pull_request:
+  #   branches: [main, dev]
+  #   types: [opened, synchronize, reopened]
+  push:
+    branches: [feature/actions]
 
 jobs:
   build-and-test:
