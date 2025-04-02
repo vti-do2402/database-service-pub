@@ -7,8 +7,11 @@ on: # trigger conditions
 
 jobs:
   build-and-test:
-    uses: vti-do2402/cicd-core/.github/workflows/maven-spring-ci.yml@dev
+    uses: vti-do2402/cicd-core/.github/workflows/ci.yml@feature/actions
     with:
-      runs-on: ${{ vars.RUNS_ON }}
+      runs_on: ${{ vars.RUNS_ON }}
+      java_version: ${{ vars.JAVA_VERSION }}
       distribution: ${{ vars.JAVA_DISTRIBUTION }}
-      java-version: ${{ vars.JAVA_VERSION }}
+      github_token: ${{ vars.GITHUB_TOKEN }}
+      default_bump: ${{ vars.VERSION_BUMP_TYPE }}
+      skip_lint: true
