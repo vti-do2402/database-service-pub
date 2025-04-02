@@ -3,11 +3,13 @@ name: Test Approval
 on:
   push:
     branches: [test/cicd]
-
+env:
+  CICD_REPO: vti-do2402/cicd-core
+  CICD_VERSION: feat/actions
 jobs:
   ci:
     name: CI
-    uses: vti-do2402/cicd-core/.github/workflows/ci.yml@feature/actions
+    uses: ${{ env.CICD_REPO }}/.github/workflows/ci.yml@${{ env.CICD_VERSION }}
     with:
       runs_on: ${{ vars.RUNS_ON }}
       java_version: ${{ vars.JAVA_VERSION }}
