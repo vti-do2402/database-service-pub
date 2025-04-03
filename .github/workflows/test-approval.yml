@@ -1,29 +1,38 @@
-name: Test Approval
+name: Build
 
 on:
   push:
-    branches: [test/cicd]
+    branches:
+      - test/cicd
 
 jobs:
-  tag-and-release:
-    runs-on: ${{ vars.RUNS_ON }}
-    outputs:
-      new_tag: ${{ steps.tag_version.outputs.new_tag }}
-      changelog: ${{ steps.tag_version.outputs.changelog }}
-    steps:
-      - name: Calculate or Create Tag
-        id: tag_version
-        uses: mathieudutour/github-tag-action@v6.2
-        with:
-          github_token: ${{ github.token }}
-          default_bump: ${{ vars.VERSION_BUMP_TYPE }}
-          dry_run: true
+  build:
+    name: Build and analyze
+    runs-on: ubuntu-latest
 
-      - name: Create GitHub Release
-        uses: ncipollo/release-action@v1
+    steps:
+      - uses: actions/checkout@v4
         with:
-          tag: ${{ steps.tag_version.outputs.new_tag }}
-          name: Release ${{ steps.tag_version.outputs.new_tag }}
-          body: ${{ steps.tag_version.outputs.changelog }}
-          draft: true
-          token: ${{ github.token }}
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: "zulu" # Alternative distribution options are available.
+      - name: Cache SonarQube packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Build and analyze
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Database-Service -Dsonar.projectName='Database Service'
