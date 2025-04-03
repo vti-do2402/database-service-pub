@@ -5,13 +5,39 @@ on:
     branches: [test/cicd]
 
 jobs:
-  test-deploy:
-    uses: vti-do2402/cicd-core/.github/workflows/deploy-ecr.yml@feat/actions
-    with:
-      runs_on: ${{ vars.RUNS_ON }}
-      environment: ${{ vars.ENVIRONMENT }}
-      ecr_repository: ${{ vars.ECR_REPOSITORY }}
-      image_tag: ${{ github.run_number }}
-      aws_account_id: "257120632758"
-      aws_region: ${{ vars.AWS_REGION }}
-      github_token: ${{ github.token }}
+  deploy-ecr:
+    name: Deploy to Amazon ECR
+    runs-on: ${{ vars.RUNS_ON }}
+    environment:
+      name: ${{ vars.ENVIRONMENT }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Important for Sonar analysis
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::257120632758:role/github-actions
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login_ecr
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          registries: "257120632758"
+
+      - name: Build, Tag, and Push Docker Image to ECR
+        shell: bash
+        env:
+          REGISTRY: ${{ steps.login_ecr.outputs.registry }}
+          REPOSITORY: ${{ vars.ECR_REPOSITORY }}
+          IMAGE_TAG: test
+          DOCKERFILE_PATH: Dockerfile
+          DOCKER_BUILD_DIRECTORY: .
+        run: |
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -f $DOCKERFILE_PATH $DOCKER_BUILD_DIRECTORY
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          echo "Image tag: $IMAGE_TAG"
+          echo "Push image to ECR: $REGISTRY/$REPOSITORY:$IMAGE_TAG"
