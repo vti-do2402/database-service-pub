@@ -44,3 +44,10 @@ jobs:
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
           echo "Image tag: $IMAGE_TAG"
           echo "Push image to ECR: $REGISTRY/$REPOSITORY:$IMAGE_TAG"
+
+      - name: Pull Image from ECR
+        shell: bash
+        run: |
+          docker pull $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          echo "Pulled image from ECR: $REGISTRY/$REPOSITORY:$IMAGE_TAG"
+          docker run -d -p 8081:8081 $REGISTRY/$REPOSITORY:$IMAGE_TAG
