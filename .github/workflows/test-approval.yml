@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: development
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
