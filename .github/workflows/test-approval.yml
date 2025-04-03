@@ -7,9 +7,9 @@ on:
 jobs:
   deploy-ecr:
     name: Deploy to Amazon ECR
-    runs-on: ${{ vars.RUNS_ON }}
+    runs-on: ubuntu-latest
     environment:
-      name: ${{ vars.ENVIRONMENT }}
+      name: development
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -19,14 +19,14 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::257120632758:role/github-actions
-          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login_ecr
         uses: aws-actions/amazon-ecr-login@v2
         with:
-          registries: "257120632758"
+          registries: ${{ secrets.AWS_ACCOUNT_ID }}
 
       - name: Build, Tag, and Push Docker Image to ECR
         shell: bash
