@@ -5,53 +5,25 @@ on:
     branches: [test/cicd]
 
 jobs:
-  deploy-ecr:
-    name: Deploy to Amazon ECR
-    runs-on: ubuntu-latest
-    environment:
-      name: development
-    permissions:
-      id-token: write
-      contents: read
+  tag-and-release:
+    runs-on: ${{ vars.RUNS_ON }}
+    outputs:
+      new_tag: ${{ steps.tag_version.outputs.new_tag }}
+      changelog: ${{ steps.tag_version.outputs.changelog }}
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+      - name: Calculate or Create Tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.2
         with:
-          fetch-depth: 0 # Important for Sonar analysis
+          github_token: ${{ github.token }}
+          default_bump: ${{ vars.VERSION_BUMP_TYPE }}
+          dry_run: true
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+      - name: Create GitHub Release
+        uses: ncipollo/release-action@v1
         with:
-          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions-role
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Login to Amazon ECR
-        id: login_ecr
-        uses: aws-actions/amazon-ecr-login@v2
-        with:
-          registries: ${{ secrets.AWS_ACCOUNT_ID }}
-
-      - name: Build, Tag, and Push Docker Image to ECR
-        shell: bash
-        env:
-          REGISTRY: ${{ steps.login_ecr.outputs.registry }}
-          REPOSITORY: ${{ vars.ECR_REPOSITORY }}
-          IMAGE_TAG: test
-          DOCKERFILE_PATH: Dockerfile
-          DOCKER_BUILD_DIRECTORY: .
-        run: |
-          # docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -f $DOCKERFILE_PATH $DOCKER_BUILD_DIRECTORY
-          # docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
-          echo "Image tag: $IMAGE_TAG"
-          echo "Push image to ECR: $REGISTRY/$REPOSITORY:$IMAGE_TAG"
-
-      - name: Pull Image from ECR
-        shell: bash
-        env:
-          REGISTRY: ${{ steps.login_ecr.outputs.registry }}
-          REPOSITORY: ${{ vars.ECR_REPOSITORY }}
-          IMAGE_TAG: test
-        run: |
-          docker pull $REGISTRY/$REPOSITORY:$IMAGE_TAG
-          echo "Pulled image from ECR: $REGISTRY/$REPOSITORY:$IMAGE_TAG"
-          docker run -d -p 8081:8081 $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}
+          draft: true
+          token: ${{ github.token }}
