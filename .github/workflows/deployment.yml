@@ -46,9 +46,6 @@ jobs:
       contents: write
     uses: vti-do2402/cicd-core/.github/workflows/deploy-ecr.yml@feat/actions
     with:
-      runs_on: ${{ vars.RUNS_ON }}
-      environment: ${{ vars.ENVIRONMENT }}
-      ecr_repository: ${{ vars.WORKSPACE }}/${{ vars.ECR_REPOSITORY }}
       image_tag: ${{ needs.calculate-version.outputs.new_tag }}
     secrets:
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
