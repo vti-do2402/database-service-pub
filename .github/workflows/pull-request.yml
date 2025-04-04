@@ -4,23 +4,23 @@ on: # trigger conditions
   pull_request:
     branches:
       - main
-      # - dev
+      - dev
     types: [opened, synchronize, reopened]
 
 permissions:
   id-token: write
   contents: write
-  packages: write
 
 jobs:
   ci:
-    name: Test, Analyze and Build
+    name: "🔍 Check"
     uses: vti-do2402/cicd-core/.github/workflows/ci-maven.yml@feat/actions
     with:
       runs_on: ${{ vars.RUNS_ON }}
       distribution: ${{ vars.JAVA_DISTRIBUTION }}
       java_version: ${{ vars.JAVA_VERSION }}
       skip_sonar: true
+      artifacts: database-service
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
