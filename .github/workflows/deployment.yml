@@ -10,7 +10,7 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  ci:
+  build:
     name: "🔍 Build"
     uses: vti-do2402/cicd-core/.github/workflows/ci-maven.yml@feat/actions
     with:
@@ -22,9 +22,9 @@ jobs:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-  calculate_version:
+  calculate-version:
     name: "📝 Version"
-    needs: [ci]
+    needs: [build]
     permissions:
       contents: write
     uses: vti-do2402/cicd-core/.github/workflows/tag-and-release.yml@feat/actions
@@ -38,7 +38,7 @@ jobs:
 
   deploy:
     name: "🚀 Deploy"
-    needs: [calculate_version]
+    needs: [calculate-version]
     permissions:
       id-token: write
       contents: write
@@ -47,12 +47,12 @@ jobs:
       runs_on: ${{ vars.RUNS_ON }}
       environment: ${{ vars.ENVIRONMENT }}
       ecr_repository: ${{ vars.ECR_REPOSITORY }}
-      image_tag: ${{ needs.calculate_version.outputs.new_tag }}
+      image_tag: ${{ needs.calculate-version.outputs.tag-and-release.new_tag }}
     secrets:
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
 
-  publish-release:
+  release:
     name: "📦 Release"
     needs: [deploy]
     permissions:
