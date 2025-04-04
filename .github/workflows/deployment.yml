@@ -33,6 +33,7 @@ jobs:
       default_bump: ${{ vars.VERSION_BUMP_TYPE }}
       dry_run_tag: true
       draft_release: true
+      artifacts: database-service
     secrets:
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
