@@ -11,19 +11,19 @@ on:
 
 jobs:
   ci:
-    name: Build and Test with Maven
+    name: "🔍 Build & Test"
     uses: vti-do2402/cicd-core/.github/workflows/ci-maven.yml@feat/actions
     with:
       runs_on: ${{ vars.RUNS_ON }}
       java_version: ${{ vars.JAVA_VERSION }}
       distribution: ${{ vars.JAVA_DISTRIBUTION }}
-      skip_lint: true
+      skip_sonar: true
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-  tag-and-release-draft:
-    name: Tag and Release Draft
+  calculate_version:
+    name: "📝 Calculate Next Version"
     needs: [ci]
     permissions:
       contents: write
@@ -31,13 +31,14 @@ jobs:
     with:
       runs_on: ${{ vars.RUNS_ON }}
       default_bump: ${{ vars.VERSION_BUMP_TYPE }}
-      github_token: ${{ github.token }}
       dry_run_tag: true
       draft_release: true
+    secrets:
+      TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   deploy:
-    name: Deploy to Amazon ECR
-    needs: [tag-and-release-draft]
+    name: "🚀 Deploy to ECR"
+    needs: [calculate_version]
     permissions:
       id-token: write
       contents: write
@@ -46,13 +47,13 @@ jobs:
       runs_on: ${{ vars.RUNS_ON }}
       environment: ${{ vars.ENVIRONMENT }}
       ecr_repository: ${{ vars.ECR_REPOSITORY }}
-      image_tag: ${{ needs.tag-and-release-draft.outputs.tag-and-release.new_tag }}
+      image_tag: ${{ needs.calculate_version.outputs.new_tag }}
     secrets:
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
 
-  tag-and-release:
-    name: Tag and Release
+  publish-release:
+    name: "📦 Create Release"
     needs: [deploy]
     permissions:
       contents: write
@@ -60,4 +61,5 @@ jobs:
     with:
       runs_on: ${{ vars.RUNS_ON }}
       default_bump: ${{ vars.VERSION_BUMP_TYPE }}
-      github_token: ${{ github.token }}
+    secrets:
+      TOKEN: ${{ secrets.GITHUB_TOKEN }}

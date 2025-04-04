@@ -20,7 +20,7 @@ jobs:
       runs_on: ${{ vars.RUNS_ON }}
       distribution: ${{ vars.JAVA_DISTRIBUTION }}
       java_version: ${{ vars.JAVA_VERSION }}
-      skip_lint: true
+      skip_sonar: true
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
