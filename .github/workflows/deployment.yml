@@ -63,5 +63,6 @@ jobs:
     with:
       runs_on: ${{ vars.RUNS_ON }}
       default_bump: ${{ vars.VERSION_BUMP_TYPE }}
+      artifacts: database-service
     secrets:
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
