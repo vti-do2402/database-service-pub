@@ -58,5 +58,5 @@ jobs:
     uses: vti-do2402/cicd-core/.github/workflows/tag-and-release.yml@feat/actions
     with:
       runs_on: ${{ vars.RUNS_ON }}
-      default_pump: ${{ vars.VERSION_BUMP_TYPE }}
+      default_bump: ${{ vars.VERSION_BUMP_TYPE }}
       github_token: ${{ github.token }}
