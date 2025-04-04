@@ -2,13 +2,20 @@ name: Pull Request Opened
 
 on: # trigger conditions
   pull_request:
-    branches: [main, dev]
+    branches:
+      - main
+      - dev
     types: [opened, synchronize, reopened]
 
+permissions:
+  id-token: write
+  contents: write
+  packages: write
+
 jobs:
-  build-and-test:
+  ci:
     name: Test, Analyze and Build
-    uses: vti-do2402/cicd-core/.github/workflows/maven/ci.yml@feat/actions
+    uses: vti-do2402/cicd-core/.github/workflows/ci-maven.yml@feat/actions
     with:
       runs_on: ${{ vars.RUNS_ON }}
       distribution: ${{ vars.JAVA_DISTRIBUTION }}
