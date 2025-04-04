@@ -25,6 +25,8 @@ jobs:
   tag-and-release-draft:
     name: Tag and Release Draft
     needs: [ci]
+    permissions:
+      contents: write
     uses: vti-do2402/cicd-core/.github/workflows/tag-and-release.yml@feat/actions
     with:
       runs_on: ${{ vars.RUNS_ON }}
@@ -53,7 +55,6 @@ jobs:
     name: Tag and Release
     needs: [deploy]
     permissions:
-      id-token: write
       contents: write
     uses: vti-do2402/cicd-core/.github/workflows/tag-and-release.yml@feat/actions
     with:
