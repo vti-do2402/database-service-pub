@@ -11,7 +11,7 @@ on:
 
 jobs:
   ci:
-    name: "🔍 Build & Test"
+    name: "🔍 Build"
     uses: vti-do2402/cicd-core/.github/workflows/ci-maven.yml@feat/actions
     with:
       runs_on: ${{ vars.RUNS_ON }}
@@ -23,7 +23,7 @@ jobs:
       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
   calculate_version:
-    name: "📝 Calculate Next Version"
+    name: "📝 Version"
     needs: [ci]
     permissions:
       contents: write
@@ -37,7 +37,7 @@ jobs:
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   deploy:
-    name: "🚀 Deploy to ECR"
+    name: "🚀 Deploy"
     needs: [calculate_version]
     permissions:
       id-token: write
@@ -53,7 +53,7 @@ jobs:
       AWS_REGION: ${{ secrets.AWS_REGION }}
 
   publish-release:
-    name: "📦 Create Release"
+    name: "📦 Release"
     needs: [deploy]
     permissions:
       contents: write
