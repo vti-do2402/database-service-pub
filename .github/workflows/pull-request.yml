@@ -7,8 +7,13 @@ on: # trigger conditions
 
 jobs:
   build-and-test:
-    uses: vti-do2402/cicd-core/.github/workflows/maven-spring-ci.yml@dev
+    name: Test, Analyze and Build
+    uses: vti-do2402/cicd-core/.github/workflows/maven/ci.yml@feat/actions
     with:
-      runs-on: ${{ vars.RUNS_ON }}
+      runs_on: ${{ vars.RUNS_ON }}
       distribution: ${{ vars.JAVA_DISTRIBUTION }}
-      java-version: ${{ vars.JAVA_VERSION }}
+      java_version: ${{ vars.JAVA_VERSION }}
+      skip_lint: true
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
