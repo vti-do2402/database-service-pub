@@ -1,4 +1,4 @@
-name: Build And Publish to Amazon ECR
+name: Deployment
 
 on:
   push:
