@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.example</groupId>
 	<artifactId>database-service</artifactId>
-	<version>quentinvu@Quentins-MacBook-Pro ~/Schooling/VTI/2024/do2402-devops/mock-project/microservices/database-service % mvn clean install -DskipTests</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<name>database-service</name>
 	<description>VTI DO2402 - Project for Spring Boot</description>
 	<url/>
