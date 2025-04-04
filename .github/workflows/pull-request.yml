@@ -5,8 +5,13 @@ on: # trigger conditions
     branches: [main, dev]
     types: [opened, synchronize, reopened]
 
+permissions:
+  id-token: write
+  contents: write
+  packages: write
+
 jobs:
-  build-and-test:
+  build:
     name: Test, Analyze and Build
     uses: vti-do2402/cicd-core/.github/workflows/maven/ci.yml@feat/actions
     with:
