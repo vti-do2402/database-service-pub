@@ -47,7 +47,7 @@ jobs:
       runs_on: ${{ vars.RUNS_ON }}
       environment: ${{ vars.ENVIRONMENT }}
       ecr_repository: ${{ vars.ECR_REPOSITORY }}
-      image_tag: ${{ needs.calculate-version.outputs.tag-and-release.new_tag }}
+      image_tag: ${{ needs.calculate-version.outputs.new_tag }}
     secrets:
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
