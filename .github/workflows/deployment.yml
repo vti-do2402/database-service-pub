@@ -1,22 +1,69 @@
-name: Build And Publish to Amazon ECR
+name: Deployment
 
 on:
   push:
-    branches: [main]
-
-permissions:
-  contents: write
-  packages: write
+    branches:
+      - main
+  pull_request:
+    branches:
+      - dev
+    types: [opened, synchronize, reopened]
 
 jobs:
-  ci:
-    name: Build and Test with Maven
+  build:
+    name: "🔍 Build"
     uses: vti-do2402/cicd-core/.github/workflows/ci-maven.yml@feat/actions
     with:
       runs_on: ${{ vars.RUNS_ON }}
       java_version: ${{ vars.JAVA_VERSION }}
       distribution: ${{ vars.JAVA_DISTRIBUTION }}
-      skip_lint: true
+      skip_sonar: true
+      artifacts: database-service
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+  calculate-version:
+    name: "📝 Version"
+    needs: [build]
+    permissions:
+      contents: write
+    uses: vti-do2402/cicd-core/.github/workflows/tag-and-release.yml@feat/actions
+    with:
+      runs_on: ${{ vars.RUNS_ON }}
+      default_bump: ${{ vars.VERSION_BUMP_TYPE }}
+      dry_run_tag: true
+      draft_release: true
+      artifacts: database-service
+    secrets:
+      TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy:
+    name: "🚀 Deploy"
+    needs: [calculate-version]
+    permissions:
+      id-token: write
+      contents: write
+    uses: vti-do2402/cicd-core/.github/workflows/deploy-ecr.yml@feat/actions
+    with:
+      runs_on: ${{ vars.RUNS_ON }}
+      environment: ${{ vars.ENVIRONMENT }}
+      ecr_repository: ${{ vars.ECR_REPOSITORY }}
+      workspace: ${{ vars.WORKSPACE }}
+      image_tag: ${{ needs.calculate-version.outputs.new_tag }}
+    secrets:
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+
+  release:
+    name: "📦 Release"
+    needs: [deploy]
+    permissions:
+      contents: write
+    uses: vti-do2402/cicd-core/.github/workflows/tag-and-release.yml@feat/actions
+    with:
+      runs_on: ${{ vars.RUNS_ON }}
+      default_bump: ${{ vars.VERSION_BUMP_TYPE }}
+      artifacts: database-service
+    secrets:
+      TOKEN: ${{ secrets.GITHUB_TOKEN }}
