@@ -3,6 +3,7 @@ name: Pull Request
 on: # trigger conditions
   pull_request:
     branches:
+      - main
       - dev
     types: [opened, synchronize, reopened]
 
