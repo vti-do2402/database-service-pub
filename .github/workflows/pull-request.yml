@@ -1,14 +1,26 @@
-name: Pull Request Opened
+name: Pull Request
 
 on: # trigger conditions
   pull_request:
-    branches: [main, dev]
+    branches:
+      - main
+      - dev
     types: [opened, synchronize, reopened]
 
+permissions:
+  id-token: write
+  contents: write
+
 jobs:
-  build-and-test:
-    uses: vti-do2402/cicd-core/.github/workflows/maven-spring-ci.yml@dev
+  ci:
+    name: "🔍 Check"
+    uses: vti-do2402/cicd-core/.github/workflows/ci-maven.yml@feat/actions
     with:
-      runs-on: ${{ vars.RUNS_ON }}
+      runs_on: ${{ vars.RUNS_ON }}
       distribution: ${{ vars.JAVA_DISTRIBUTION }}
-      java-version: ${{ vars.JAVA_VERSION }}
+      java_version: ${{ vars.JAVA_VERSION }}
+      skip_sonar: true
+      artifacts: database-service
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
