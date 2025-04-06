@@ -9,6 +9,7 @@ jobs:
   build:
     name: "🔍 Build"
     uses: vti-do2402/cicd-core/.github/workflows/ci-maven.yml@main
+
     with:
       runs_on: ${{ vars.RUNS_ON }}
       java_version: ${{ vars.JAVA_VERSION }}
