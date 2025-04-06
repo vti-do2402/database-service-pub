@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     name: "🔍 Build"
-    uses: vti-do2402/cicd-core/.github/workflows/ci-maven.yml@feat/actions
+    uses: vti-do2402/cicd-core/.github/workflows/ci-maven.yml@main
     with:
       runs_on: ${{ vars.RUNS_ON }}
       java_version: ${{ vars.JAVA_VERSION }}
@@ -24,7 +24,7 @@ jobs:
     needs: [build]
     permissions:
       contents: write
-    uses: vti-do2402/cicd-core/.github/workflows/tag-and-release.yml@feat/actions
+    uses: vti-do2402/cicd-core/.github/workflows/tag-and-release.yml@main
     with:
       runs_on: ${{ vars.RUNS_ON }}
       default_bump: ${{ vars.VERSION_BUMP_TYPE }}
@@ -40,7 +40,7 @@ jobs:
     permissions:
       id-token: write
       contents: write
-    uses: vti-do2402/cicd-core/.github/workflows/deploy-ecr.yml@feat/actions
+    uses: vti-do2402/cicd-core/.github/workflows/deploy-ecr.yml@main
     with:
       runs_on: ${{ vars.RUNS_ON }}
       environment: ${{ vars.ENVIRONMENT }}
@@ -56,7 +56,7 @@ jobs:
     needs: [deploy]
     permissions:
       contents: write
-    uses: vti-do2402/cicd-core/.github/workflows/tag-and-release.yml@feat/actions
+    uses: vti-do2402/cicd-core/.github/workflows/tag-and-release.yml@main
     with:
       runs_on: ${{ vars.RUNS_ON }}
       default_bump: ${{ vars.VERSION_BUMP_TYPE }}
