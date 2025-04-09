@@ -36,16 +36,6 @@ jobs:
     secrets:
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  wait-for-approval:
-    name: "🔍 Wait for Approval"
-    needs: [calculate-version]
-    runs-on: ${{ vars.RUNS_ON }}
-    steps:
-      - name: Wait for Approval
-        run: |
-          echo "Waiting for approval..."
-          sleep 100
-
   deploy:
     name: "🚀 Deploy"
     needs: [calculate-version]
@@ -63,27 +53,9 @@ jobs:
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
 
-  check-image-exists:
-    name: "🔍 Check Image Exists"
-    runs-on: ${{ vars.RUNS_ON }}
-    needs: [deploy]
-    steps:
-      - name: Check Image Exists
-        run: |
-          image=${{ needs.deploy.outputs.image }}
-          image_latest=${{ needs.deploy.outputs.image_latest }}
-
-          if [ -z "$image" ]; then
-            echo "Image is empty"
-            exit 1
-          fi
-
-          echo "Image: $image"
-          echo "Image Latest: $image_latest"
-
   update-k8s:
     name: "🔄 Update Kubernetes"
-    needs: [check-image-exists]
+    needs: [deploy]
     permissions:
       contents: write
     uses: vti-do2402/cicd-core/.github/workflows/update-k8s.yml@feat/update-k8s
