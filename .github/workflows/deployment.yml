@@ -42,7 +42,7 @@ jobs:
     permissions:
       id-token: write
       contents: write
-    uses: vti-do2402/cicd-core/.github/workflows/deploy-ecr.yml@main
+    uses: vti-do2402/cicd-core/.github/workflows/deploy-ecr.yml@feat/update-k8s
     with:
       runs_on: ${{ vars.RUNS_ON }}
       environment: ${{ vars.ENVIRONMENT }}
