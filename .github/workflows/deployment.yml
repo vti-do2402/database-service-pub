@@ -61,12 +61,13 @@ jobs:
       - name: Check Image Exists
         run: |
           image=${{ needs.deploy.outputs.image }}
+          image_latest=${{ needs.deploy.outputs.image_latest }}
           if [ -z "$image" ]; then
             echo "Image is empty"
             exit 1
           fi
           echo "Image: $image"
-
+          echo "Image Latest: $image_latest"
   update-k8s:
     name: "🔄 Update Kubernetes"
     needs: [check-image-exists]
