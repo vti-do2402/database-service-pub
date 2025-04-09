@@ -6,12 +6,12 @@ on:
       - test/cicd
 
 jobs:
-  update-k8s:
-    name: Update Kubernetes Manifest
-    uses: vti-do2402/cicd-core/.github/workflows/update-k8s.yml@feat/update-k8s
-    with:
-      service: database-service
-      image: test-image
-      runs_on: ubuntu-latest
-    secrets:
-      TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  testing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test Action
+        uses: vti-do2402/cicd-core/.github/actions/ci/maven/action.yml@feat/update-k8s
+        with:
+          java_version: 17
+          distribution: corretto
+          skip_lint: false
