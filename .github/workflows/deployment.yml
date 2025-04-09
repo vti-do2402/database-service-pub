@@ -53,9 +53,23 @@ jobs:
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
 
+  check-image-exists:
+    name: "🔍 Check Image Exists"
+    runs-on: ${{ vars.RUNS_ON }}
+    needs: [deploy]
+    steps:
+      - name: Check Image Exists
+        run: |
+          image=${{ needs.deploy.outputs.image }}
+          if [ -z "$image" ]; then
+            echo "Image is empty"
+            exit 1
+          fi
+          echo "Image: $image"
+
   update-k8s:
     name: "🔄 Update Kubernetes"
-    needs: [deploy]
+    needs: [check-image-exists]
     permissions:
       contents: write
     uses: vti-do2402/cicd-core/.github/workflows/update-k8s.yml@feat/update-k8s
