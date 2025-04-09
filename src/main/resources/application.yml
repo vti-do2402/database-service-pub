@@ -6,7 +6,7 @@ spring:
     name: database-service
   data:
     mongodb:
-      uri: ${MONGODB_URI}
+      uri: mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}/${MONGODB_DATABASE}?authSource=admin
       port: ${DATABASE_PORT:27017}
 
 logging:
