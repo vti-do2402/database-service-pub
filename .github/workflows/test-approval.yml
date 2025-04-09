@@ -8,7 +8,7 @@ on:
 jobs:
   update-k8s:
     name: Update Kubernetes Manifest
-    uses: vti-do2402/cicd-core/.github/workflows/update-k8s.yml@feat/k8s-manifest
+    uses: vti-do2402/cicd-core/.github/workflows/update-k8s.yml@feat/update-k8s
     with:
       service: database-service
       image: test-image
