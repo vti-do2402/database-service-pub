@@ -53,22 +53,9 @@ jobs:
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
 
-  release:
-    name: "📦 Release"
-    needs: [deploy]
-    permissions:
-      contents: write
-    uses: vti-do2402/cicd-core/.github/workflows/tag-and-release.yml@main
-    with:
-      runs_on: ${{ vars.RUNS_ON }}
-      default_bump: ${{ vars.VERSION_BUMP_TYPE }}
-      artifacts: database-service
-    secrets:
-      TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   update-k8s:
     name: "🔄 Update Kubernetes"
-    needs: [release]
+    needs: [deploy]
     permissions:
       contents: write
     uses: vti-do2402/cicd-core/.github/workflows/update-k8s.yml@feat/update-k8s
@@ -76,5 +63,18 @@ jobs:
       runs_on: ${{ vars.RUNS_ON }}
       service: database-service
       image: ${{ needs.deploy.outputs.image }}
+    secrets:
+      TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  release:
+    name: "📦 Release"
+    needs: [update-k8s]
+    permissions:
+      contents: write
+    uses: vti-do2402/cicd-core/.github/workflows/tag-and-release.yml@main
+    with:
+      runs_on: ${{ vars.RUNS_ON }}
+      default_bump: ${{ vars.VERSION_BUMP_TYPE }}
+      artifacts: database-service
     secrets:
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
