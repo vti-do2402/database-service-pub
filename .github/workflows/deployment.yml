@@ -78,16 +78,3 @@ jobs:
       artifacts: database-service
     secrets:
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  update-k8s:
-    name: "🔄 Update Kubernetes"
-    needs: [release]
-    permissions:
-      contents: write
-    uses: vti-do2402/cicd-core/.github/workflows/update-k8s.yml@feat/update-k8s
-    with:
-      runs_on: ${{ vars.RUNS_ON }}
-      service: database-service
-      image: ${{ needs.deploy.outputs.image }}
-    secrets:
-      TOKEN: ${{ secrets.GITHUB_TOKEN }}
