@@ -22,14 +22,6 @@ RUN ./mvnw clean package -DskipTests
 FROM eclipse-temurin:17-jre-ubi9-minimal
 WORKDIR /app
 
-ARG APP_NAME
-ARG APP_VERSION
-
-# Application metadata
-LABEL maintainer="Quentin Vu <quentindevops@gmail.com>" \
-      app.name=${APP_NAME:-database-service} \
-      app.version=${APP_VERSION:-1.0.0}
-
 # Copy JAR from builder stage
 COPY --from=builder /workspace/app/target/*.jar app.jar
 
