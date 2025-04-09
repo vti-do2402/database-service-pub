@@ -13,3 +13,5 @@ jobs:
       service: database-service
       image: test-image
       runs_on: ubuntu-latest
+    secrets:
+      TOKEN: ${{ secrets.GITHUB_TOKEN }}
