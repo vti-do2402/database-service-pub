@@ -36,6 +36,16 @@ jobs:
     secrets:
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  wait-for-approval:
+    name: "🔍 Wait for Approval"
+    needs: [calculate-version]
+    runs-on: ${{ vars.RUNS_ON }}
+    steps:
+      - name: Wait for Approval
+        run: |
+          echo "Waiting for approval..."
+          sleep 100
+
   deploy:
     name: "🚀 Deploy"
     needs: [calculate-version]
@@ -62,12 +72,12 @@ jobs:
         run: |
           image=${{ needs.deploy.outputs.image }}
           image_latest=${{ needs.deploy.outputs.image_latest }}
-          
+
           if [ -z "$image" ]; then
             echo "Image is empty"
             exit 1
           fi
-          
+
           echo "Image: $image"
           echo "Image Latest: $image_latest"
 
@@ -79,6 +89,7 @@ jobs:
     uses: vti-do2402/cicd-core/.github/workflows/update-k8s.yml@feat/update-k8s
     with:
       runs_on: ${{ vars.RUNS_ON }}
+      environment: ${{ vars.ENVIRONMENT }}
       service: database-service
       image: ${{ needs.deploy.outputs.image }}
     secrets:
