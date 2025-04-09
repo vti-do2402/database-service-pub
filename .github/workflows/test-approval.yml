@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Test Action
-        uses: vti-do2402/cicd-core/.github/actions/ci/maven/action.yml@feat/update-k8s
+        uses: vti-do2402/cicd-core/.github/actions/ci/maven@feat/update-k8s
         with:
           java_version: 17
           distribution: corretto
