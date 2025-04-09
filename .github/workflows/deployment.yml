@@ -53,9 +53,22 @@ jobs:
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
 
+  update-k8s:
+    name: "🔄 Update Kubernetes"
+    needs: [deploy]
+    permissions:
+      contents: write
+    uses: vti-do2402/cicd-core/.github/workflows/update-k8s.yml@feat/update-k8s
+    with:
+      runs_on: ${{ vars.RUNS_ON }}
+      service: database-service
+      image: ${{ needs.deploy.outputs.image }}
+    secrets:
+      TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   release:
     name: "📦 Release"
-    needs: [deploy]
+    needs: [update-k8s]
     permissions:
       contents: write
     uses: vti-do2402/cicd-core/.github/workflows/tag-and-release.yml@main
